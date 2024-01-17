@@ -4,7 +4,7 @@ from django.contrib.auth.models import (
 from django.core.validators import MinLengthValidator
 from django.db import models
 
-from .validators import numeric_only, phone_regex
+from .validators import numeric_only, validate_telephone_number
 
 
 class UserManager(BaseUserManager):
@@ -41,7 +41,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         max_length=40,
     )
     phone_number = models.CharField(
-        validators=[phone_regex],
+        validators=[validate_telephone_number],
         max_length=17,
         blank=True
     )
@@ -71,7 +71,7 @@ class Organization(models.Model):
     title = models.CharField(max_length=100)
     description = models.CharField(max_length=255)
     address = models.CharField(max_length=200)
-    postcode = models.Charfield(
+    postcode = models.CharField(
         max_length=6,
         validators=[MinLengthValidator(6), numeric_only]
     )
@@ -86,7 +86,7 @@ class Event(models.Model):
     title = models.CharField(max_length=100)
     description = models.CharField(max_length=255)
     organizations = models.ManyToManyField(Organization)
-    image = models.ImageField()
+    image = models.ImageField(blank=True, null=True, upload_to='images')
     date = models.DateTimeField()
 
     def __str__(self):

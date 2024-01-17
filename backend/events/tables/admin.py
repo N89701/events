@@ -29,7 +29,7 @@ class OrganizationAdmin(admin.ModelAdmin):
 
 
 class OrganizationInline(admin.TabularInline):
-    model = Organization
+    model = Event.organizations.through
 
 
 @admin.register(Event)

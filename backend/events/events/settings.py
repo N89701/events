@@ -15,6 +15,14 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+
+    "drf_yasg",
+    "rest_framework",
+    "rest_framework.authtoken",
+    "djoser",
+
+    "api",
+    "tables",
 ]
 
 MIDDLEWARE = [
@@ -69,6 +77,34 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTH_USER_MODEL = 'tables.User'
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+    'DATETIME_FORMAT': '%d-%m-%Y, %H:%M',
+}
+
+DJOSER = {
+    'LOGIN_FIELD': 'email',
+    'SERIALIZERS': {
+        'user_create': (
+            'api.serializers.UserCustomSerializer'
+        ),
+        'user': (
+            'api.serializers.UserCustomSerializer'
+        ),
+        'current_user': (
+            'api.serializers.UserCustomSerializer'
+        ),
+    },
+    'HIDE_USERS': False,
+}
+
 LANGUAGE_CODE = "en-us"
 
 TIME_ZONE = "UTC"
@@ -77,10 +113,12 @@ USE_I18N = True
 
 USE_TZ = True
 
-STATIC_URL = "static/"
+STATIC_URL = "/static/"
+
+MEDIA_URL = '/media/'
+
+MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-REST_FRAMEWORK = {
-    'DATETIME_FORMAT': '%d-%m-%Y, %H:%M',
-}
+PAGE_SIZE = 10
