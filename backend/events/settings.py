@@ -1,14 +1,21 @@
+import os
 from pathlib import Path
+from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = "django-insecure-wru+!bi+w(pl!0x#h*a91*6hwu#^q0i3lp^9jk-!nx-!a#t#or"
+load_dotenv()
+
+SECRET_KEY = os.getenv('SECRET_KEY', default='secretkey123')
+# "django-insecure-wru+!bi+w(pl!0x#h*a91*6hwu#^q0i3lp^9jk-!nx-!a#t#or"
 
 DEBUG = True
 
 ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
+    "daphne",
+
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -23,6 +30,7 @@ INSTALLED_APPS = [
 
     "api",
     "tables",
+    "chats",
 ]
 
 MIDDLEWARE = [
@@ -55,12 +63,32 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "events.wsgi.application"
 
+ASGI_APPLICATION = 'events.asgi.application'
+
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.sqlite3",
+#         "NAME": BASE_DIR / "db.sqlite3",
+#     }
+# }
+
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+    'default': {
+        'ENGINE': os.getenv(
+            'DB_ENGINE',
+            default='django.db.backends.postgresql'
+        ),
+        'NAME': os.getenv('DB_NAME', default='postgres'),
+        'USER': os.getenv('POSTGRES_USER', default='postgres'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD', default='postgres'),
+        'HOST': os.getenv('DB_HOST', default='db'),
+        'PORT': os.getenv('DB_PORT', default='5432'),
+        'OPTIONS': {
+            'client_encoding': 'UTF8'
+        },
     }
 }
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -115,6 +143,8 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+
 MEDIA_URL = '/media/'
 
 MEDIA_ROOT = BASE_DIR / 'media'
@@ -122,3 +152,20 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 PAGE_SIZE = 10
+
+MESSAGE_STR = 30
+
+MESSAGES_PAGE_SIZE = 50
+
+REDIS_HOST = os.getenv('REDIS_HOST', 'localhost')
+
+REDIS_PORT = os.getenv('REDIS_PORT', 6379)
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [(REDIS_HOST, REDIS_PORT)],
+        },
+    },
+}

@@ -1,9 +1,10 @@
 from asyncio import run
+import datetime
 
 from django.contrib.auth import get_user_model
 from djoser.serializers import UserCreateSerializer
 from rest_framework.serializers import (
-    ModelSerializer, IntegerField, ImageField
+    DateTimeField, ImageField, IntegerField, ModelSerializer, ValidationError
 )
 
 from tables.models import Organization, Event
@@ -76,10 +77,24 @@ class OrganizationInEventSerializer(ModelSerializer):
         return data
 
 
+class CustomDateTimeField(DateTimeField):
+    def to_representation(self, value):
+        if value:
+            return value.strftime('%d.%m.%Y %H:%M')
+        return None
+
+    def to_internal_value(self, value):
+        try:
+            date = datetime.datetime.strptime(value, '%d.%m.%Y %H:%M')
+            return super().to_internal_value(date)
+        except ValueError:
+            raise ValidationError('Invalid date format. Use dd.mm.yyyy hh:mm.')
+
+
 class EventGetSerializer(ModelSerializer):
     """Сериализер для отображения мероприятий."""
 
-    id = IntegerField(read_only=True)
+    date = CustomDateTimeField()
     organizations = OrganizationInEventSerializer(many=True)
 
     class Meta:
@@ -98,6 +113,7 @@ class EventCreateSerializer(ModelSerializer):
     """Сериализер для создания мероприятий."""
 
     id = IntegerField(read_only=True)
+    date = CustomDateTimeField()
 
     class Meta:
         model = Event

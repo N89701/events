@@ -1,12 +1,13 @@
 from datetime import datetime
+
 from rest_framework.filters import SearchFilter, OrderingFilter
-from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.viewsets import ModelViewSet
 
 from .pagination import LimitPageNumberPagination
 from .permissions import UserCustomPermission
 from .serializers import (
-    Event, Organization, EventCreateSerializer, EventGetSerializer,
+    Event, EventCreateSerializer, EventGetSerializer, Organization,
     OrganizationSerializer
 )
 
