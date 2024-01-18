@@ -4,5 +4,5 @@
 ## Запуск приложения на локальной машине
 1. Клонируйте репозиторий к себе на компьютер
 ```
-git clone https://github.com/
+git clone git@github.com:N89701/events.git
 ```
