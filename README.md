@@ -6,4 +6,25 @@
 ```
 git clone git@github.com:N89701/events.git
 ```
-##
+2. Откройте папку проекта в вашей IDE
+3. Откройте терминал и перейдите в папку infra, а затем запустите докер-оркестр
+```
+cd infra
+docker compose up
+```
+Приложение запущено!
+## А что оно может?
+### Регистрация
+Для регистрации необходимо отправить запрос на:
+```
+http://127.0.0.1:8001/api/users/
+```
+следующего вида
+```
+{
+"email":"yourbox@mail.ru",
+"first_name": "Ivan",
+"last_name": "Petrov",
+"password": "icantbehacked"
+}
+```
